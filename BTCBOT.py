@@ -8,8 +8,8 @@ from telegram.ext import Updater, CommandHandler, CallbackContext
 from binance.client import Client
 
 # Declare the Binance Key and Secret (This will be revoked)
-api_key = 'E0dFkpzPfvCtqTA2ccPYTaak63CNSjw50dUYJUbPn1Scb1ww75F6bP7iFUdvNJud'
-api_secret = 'rOkvjZegDGleCknqTbhBPnDATOqDlUkG2hRKNcpxJYlLtUtdTsP2uiS5pTPWgPMQ'
+api_key = 'YOUR_BINANCE_API_ KEY'
+api_secret = 'YOUR_BINANCE_SECRET_KEY'
 # Declare to the python-binance library
 client = Client(api_key, api_secret)
 
@@ -23,9 +23,9 @@ logging.basicConfig(
 # With this function we will request the actual price
 
 def price(context: CallbackContext):
-    #Using the test URL
+    # Using the test URL
     client.API_URL = 'https://testnet.binance.vision/api'
-    #Send the command to get the price
+    # Send the command to get the price
     btc_price = client.get_symbol_ticker(symbol="BTCUSDT")
     # Extract the price from the JSON format
     a = btc_price['price']
@@ -63,7 +63,7 @@ def set_timer(update: Update, context: CallbackContext) -> None:
     chat_id = update.message.chat_id
     try:
         # args[0] should contain the time for the timer in seconds
-        due = int(context.args[0]) * 60 #We will convert it to minutes
+        due = int(context.args[0]) * 60  # We will convert it to minutes
         if due < 60:
             update.message.reply_text(
                 'Sorry my friend, the updates MUST be more than 1 per minute.')
@@ -74,22 +74,24 @@ def set_timer(update: Update, context: CallbackContext) -> None:
         context.job_queue.run_repeating(
             price, due, context=chat_id, name=str(chat_id))
 
-        min = due // 60 #To inform how many minutes you will receive the update
+        min = due // 60  # To inform how many minutes you will receive the update
         text = 'Excellent, you will receive the updates every ' + \
             str(min) + ' minute(s)'
-            #We run the price once to get it now and then every due minutes
+        # We run the price once to get it now and then every due minutes
         context.job_queue.run_once(
             price, 0, context=chat_id, name=str(chat_id))
-            # Will remove it, according new instructions
+        # Will remove it, according new instructions
         if job_removed:
             text += ', Old update time has been removed.'
         update.message.reply_text(text)
-        #If it has an error
+        # If it has an error
     except (IndexError, ValueError):
         update.message.reply_text(
             'Usage: /set <minutes>, remember that MUST be more than 1 per minute')
 
 # To cancel the job
+
+
 def unset(update: Update, context: CallbackContext) -> None:
     """Remove the job if the user changed their mind."""
     chat_id = update.message.chat_id
@@ -101,7 +103,7 @@ def unset(update: Update, context: CallbackContext) -> None:
 def main() -> None:
     """Run bot."""
     # Create the Updater and pass it your bot's token.
-    updater = Updater("2079206748:AAEYF4OOmH8PKBOiWac1tHCdP9WSIsubZM0")
+    updater = Updater("YOUR_TELEGRAM_BOT_TOKEN")
 
     # Get the dispatcher to register handlers
     dispatcher = updater.dispatcher
